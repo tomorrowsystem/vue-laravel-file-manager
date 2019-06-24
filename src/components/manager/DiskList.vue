@@ -1,5 +1,5 @@
 <template>
-    <div class="fm-disk-list">
+    <div v-if="extSettings.showDiskList" class="fm-disk-list">
         <ul class="list-inline">
             <li class="list-inline-item" v-for="(disk, index) in disks" v-bind:key="index">
                 <span class="badge"
@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
   name: 'DiskList',
   props: {
@@ -20,6 +21,9 @@ export default {
     manager: { type: String, required: true },
   },
   computed: {
+    ...mapState('fm', {
+      extSettings: state => state.settings.extSettings,
+    }),
     /**
      * Disk list
      * @returns {Array}

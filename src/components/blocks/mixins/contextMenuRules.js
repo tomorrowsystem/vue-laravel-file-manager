@@ -2,14 +2,21 @@
  * Rules for context menu items (show/hide)
  * {name}Rule
  */
+import { mapState } from 'vuex';
 export default {
+  computed: {
+    ...mapState('fm', {
+      extSettings: state => state.settings.extSettings,
+    }),
+  },
   methods: {
     /**
      * Open - menu item status - show or hide
      * @returns {boolean}
      */
     openRule() {
-      return !this.multiSelect && this.firstItemType === 'dir';
+      return !this.multiSelect &&
+          this.firstItemType === 'dir';
     },
 
     /**
@@ -26,7 +33,8 @@ export default {
      * @returns {boolean}
      */
     videoPlayRule() {
-      return !this.multiSelect && this.canVideoPlay(this.selectedItems[0].extension);
+      return !this.multiSelect &&
+          this.canVideoPlay(this.selectedItems[0].extension);
     },
 
     /**
@@ -44,7 +52,8 @@ export default {
      * @returns {boolean|*}
      */
     editRule() {
-      return !this.multiSelect &&
+      return this.extSettings.canManage &&
+          !this.multiSelect &&
           this.firstItemType === 'file' &&
           this.canEdit(this.selectedItems[0].extension);
     },
@@ -54,7 +63,8 @@ export default {
      * @returns {boolean|null}
      */
     selectRule() {
-      return !this.multiSelect && this.firstItemType === 'file' &&
+      return !this.multiSelect &&
+          this.firstItemType === 'file' &&
           this.$store.state.fm.fileCallback;
     },
 
@@ -63,7 +73,9 @@ export default {
      * @returns {boolean}
      */
     downloadRule() {
-      return !this.multiSelect && this.firstItemType === 'file';
+      return this.extSettings.canDownload &&
+          !this.multiSelect &&
+          this.firstItemType === 'file';
     },
 
     /**
@@ -71,7 +83,7 @@ export default {
      * @returns {boolean}
      */
     copyRule() {
-      return true;
+      return this.extSettings.canManage;
     },
 
     /**
@@ -79,7 +91,7 @@ export default {
      * @returns {boolean}
      */
     cutRule() {
-      return true;
+      return this.extSettings.canManage;
     },
 
     /**
@@ -87,7 +99,8 @@ export default {
      * @returns {boolean}
      */
     renameRule() {
-      return !this.multiSelect;
+      return this.extSettings.canManage &&
+          !this.multiSelect;
     },
 
     /**
@@ -95,7 +108,8 @@ export default {
      * @returns {boolean}
      */
     pasteRule() {
-      return !!this.$store.state.fm.clipboard.type;
+      return this.extSettings.canManage &&
+          !!this.$store.state.fm.clipboard.type;
     },
 
     /**
@@ -103,7 +117,8 @@ export default {
      * @returns {boolean}
      */
     zipRule() {
-      return this.selectedDiskDriver === 'local';
+      return this.extSettings.canManage &&
+          this.selectedDiskDriver === 'local';
     },
 
     /**
@@ -111,7 +126,8 @@ export default {
      * @returns {boolean}
      */
     unzipRule() {
-      return this.selectedDiskDriver === 'local' &&
+      return this.extSettings.canManage &&
+          this.selectedDiskDriver === 'local' &&
           !this.multiSelect &&
           this.firstItemType === 'file' &&
           this.isZip(this.selectedItems[0].extension);
@@ -122,7 +138,7 @@ export default {
      * @returns {boolean}
      */
     deleteRule() {
-      return true;
+      return this.extSettings.canManage;
     },
 
     /**
@@ -130,7 +146,9 @@ export default {
      * @returns {boolean}
      */
     propertiesRule() {
-      return !this.multiSelect;
+      return this.extSettings.canManage &&
+          this.extSettings.showProperties &&
+          !this.multiSelect;
     },
   },
 };

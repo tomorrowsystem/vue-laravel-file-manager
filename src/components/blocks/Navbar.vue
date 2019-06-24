@@ -3,68 +3,79 @@
         <div class="row justify-content-between">
             <div class="col-auto">
                 <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-secondary"
+                    <button type="button"
+                            v-bind:class="extSettings.btnClasses"
                             v-bind:disabled="backDisabled"
                             v-bind:title="lang.btn.back"
                             v-on:click="historyBack()">
                         <i class="fas fa-step-backward"></i>
                     </button>
-                    <button type="button" class="btn btn-secondary"
+                    <button type="button"
+                            v-bind:class="extSettings.btnClasses"
                             v-bind:disabled="forwardDisabled"
                             v-bind:title="lang.btn.forward"
                             v-on:click="historyForward()">
                         <i class="fas fa-step-forward"></i>
                     </button>
-                    <button type="button" class="btn btn-secondary"
+                    <button type="button"
+                            v-bind:class="extSettings.btnClasses"
                             v-on:click="refreshAll()"
                             v-bind:title="lang.btn.refresh">
                         <i class="fas fa-sync-alt"></i>
                     </button>
                 </div>
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-secondary"
+                <div v-if="extSettings.canManage" class="btn-group" role="group">
+                    <button type="button"
+                            v-bind:class="extSettings.btnClasses"
                             v-on:click="showModal('NewFile')"
                             v-bind:title="lang.btn.file">
                         <i class="far fa-file"></i>
                     </button>
-                    <button type="button" class="btn btn-secondary"
+                    <button type="button"
+                            v-bind:class="extSettings.btnClasses"
                             v-on:click="showModal('NewFolder')"
                             v-bind:title="lang.btn.folder">
                         <i class="far fa-folder"></i>
                     </button>
-                    <button type="button" class="btn btn-secondary"
+                    <button type="button"
+                            v-bind:class="extSettings.btnClasses"
                             disabled
                             v-if="uploading"
                             v-bind:title="lang.btn.upload">
                         <i class="fas fa-upload"></i>
                     </button>
-                    <button type="button" class="btn btn-secondary"
+                    <button type="button"
+                            v-bind:class="extSettings.btnClasses"
                             v-else
                             v-on:click="showModal('Upload')"
                             v-bind:title="lang.btn.upload">
                         <i class="fas fa-upload"></i>
                     </button>
-                    <button type="button" class="btn btn-secondary"
+                    <button type="button"
+                            v-bind:class="extSettings.btnClasses"
                             v-bind:disabled="!isAnyItemSelected"
                             v-on:click="showModal('Delete')"
                             v-bind:title="lang.btn.delete">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-secondary"
+                <div v-if="extSettings.canManage" class="btn-group" role="group">
+                    <button type="button"
+                            v-bind:class="extSettings.btnClasses"
                             v-bind:disabled="!isAnyItemSelected"
                             v-bind:title="lang.btn.copy"
                             v-on:click="toClipboard('copy')">
                         <i class="fas fa-copy"></i>
                     </button>
-                    <button type="button" class="btn btn-secondary"
+                    <button type="button"
+                            v-bind:class="extSettings.btnClasses"
                             v-bind:disabled="!isAnyItemSelected"
                             v-bind:title="lang.btn.cut"
                             v-on:click="toClipboard('cut')">
                         <i class="fas fa-cut"></i>
                     </button>
-                    <button type="button" class="btn btn-secondary"
+                    <button type="button"
+                            v-bind:class="extSettings.btnClasses"
                             v-bind:disabled="!clipboardType"
                             v-bind:title="lang.btn.paste"
                             v-on:click="paste">
@@ -74,29 +85,30 @@
             </div>
             <div class="col-auto text-right">
                 <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-secondary"
-                            v-bind:class="[viewType === 'table' ? 'active' : '']"
+                    <button type="button"
+                            v-bind:class="[viewType === 'table' ? 'active' : '', extSettings.btnClasses]"
                             v-on:click="selectView('table')"
                             v-bind:title="lang.btn.table">
                         <i class="fas fa-th-list"></i>
                     </button>
-                    <button role="button" class="btn btn-secondary"
-                            v-bind:class="[viewType === 'grid' ? 'active' : '']"
+                    <button role="button"
+                            v-bind:class="[viewType === 'grid' ? 'active' : '', extSettings.btnClasses]"
                             v-on:click="selectView('grid')"
                             v-bind:title="lang.btn.grid">
                         <i class="fas fa-th"></i>
                     </button>
                 </div>
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-secondary"
+                <div v-if="extSettings.showFullScreen" class="btn-group" role="group">
+                    <button type="button"
                             v-bind:title="lang.btn.fullScreen"
-                            v-bind:class="{ active: fullScreen }"
+                            v-bind:class="[fullScreen ? 'active' : '', extSettings.btnClasses]"
                             v-on:click="screenToggle">
                         <i class="fas fa-expand-arrows-alt"></i>
                     </button>
                 </div>
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-secondary"
+                <div v-if="extSettings.showAbout" class="btn-group" role="group">
+                    <button type="button"
+                            v-bind:class="extSettings.btnClasses"
                             v-bind:title="lang.btn.about"
                             v-on:click="showModal('About')">
                         <i class="fas fa-question"></i>
@@ -108,12 +120,16 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import translate from './../../mixins/translate';
 import EventBus from './../../eventBus';
 
 export default {
   mixins: [translate],
   computed: {
+    ...mapState('fm', {
+      extSettings: state => state.settings.extSettings,
+    }),
     /**
      * Active manager name
      * @returns {default.computed.activeManager|(function())|string|activeManager}

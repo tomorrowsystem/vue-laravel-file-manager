@@ -30,6 +30,15 @@ export default {
   },
 
   /**
+   * Extend settings
+   * @param state
+   * @param data
+   */
+  extendSettings(state, data) {
+    Object.assign(state.extSettings, data);
+  },
+
+  /**
    * Initiate Axios baseUrl and headers
    * @param state
    */

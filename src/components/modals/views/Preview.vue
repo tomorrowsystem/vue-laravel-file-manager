@@ -23,7 +23,7 @@
         </div>
         <div v-if="showFooter" class="d-flex justify-content-between">
             <span class="d-block">
-                <button class="btn btn-info"
+                <button v-if="extSettings.canManage" class="btn btn-info"
                         v-bind:title="lang.modal.cropper.title" v-on:click="showCropperModule = true">
                     <i class="fas fa-crop-alt"></i>
                 </button>
@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import CropperModule from './../additions/Cropper.vue';
 import modal from './../mixins/modal';
 import translate from './../../../mixins/translate';
@@ -56,6 +57,9 @@ export default {
     this.setImgUrl();
   },
   computed: {
+    ...mapState('fm', {
+      extSettings: state => state.settings.extSettings,
+    }),
     /**
      * Selected disk
      * @returns {*}

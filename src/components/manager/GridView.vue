@@ -18,7 +18,7 @@
                  v-on:contextmenu.prevent="contextMenu(directory, $event)">
                 <div class="fm-item-icon">
                     <i class="fa-5x pb-2"
-                       v-bind:class="(acl && directory.acl === 0) ? 'fas fa-unlock-alt' : 'far fa-folder'"></i>
+                       v-bind:class="(acl && directory.acl === 0) ? 'fas fa-unlock-alt' : extSettings.folderIcon"></i>
                 </div>
                 <div class="fm-item-info">{{ directory.basename }}</div>
             </div>
@@ -48,7 +48,7 @@
                 <div class="fm-item-info">
                     {{ `${file.filename}.${file.extension}` }}
                     <br>
-                    {{ bytesToHuman(file.size) }}
+                    <span v-if="extSettings.showSize">{{ bytesToHuman(file.size) }}</span>
                 </div>
             </div>
         </div>
@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import translate from './../../mixins/translate';
 import helper from './../../mixins/helper';
 import managerHelper from './mixins/manager';
@@ -81,6 +82,9 @@ export default {
     }
   },
   computed: {
+    ...mapState('fm', {
+      extSettings: state => state.settings.extSettings,
+    }),
     /**
      * Image extensions list
      * @returns {*}

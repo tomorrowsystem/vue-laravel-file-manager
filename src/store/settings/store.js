@@ -40,6 +40,20 @@ export default {
         ar: Object.freeze(ar),
       },
 
+      // Extended settings
+      extSettings: {
+        btnClasses: 'btn btn-secondary',
+        showFullScreen: true,
+        showAbout: true,
+        showDiskList: true,
+        viewType: 'table',
+        folderIcon: 'far fa-folder',
+        showProperties: true,
+        showSize: true,
+        canDownload: true,
+        canManage: true,
+      },
+
       // Context menu items
       contextMenu: [
         [

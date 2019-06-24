@@ -35,4 +35,8 @@ export default function install(Vue, options = {}) {
   options.store.registerModule('fm', store);
 
   options.store.commit('fm/settings/manualSettings', options);
+
+  options.store.commit('fm/settings/extendSettings', fmSettings);
+
+  options.store.commit(`fm/${options.store.state.fm.activeManager}/setView`, options.store.state.fm.settings.extSettings.viewType);
 }
