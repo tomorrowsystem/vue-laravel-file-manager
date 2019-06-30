@@ -1,5 +1,5 @@
 <template>
-    <div class="fm-breadcrumb">
+    <div v-if="extSettings.showBreadcrumb" class="fm-breadcrumb">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb"
                 v-bind:class="[manager === activeManager ? 'active-manager' : 'bg-light']">
@@ -21,12 +21,16 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
   name: 'Breadcrumb',
   props: {
     manager: { type: String, required: true },
   },
   computed: {
+    ...mapState('fm', {
+      extSettings: state => state.settings.extSettings,
+    }),
     /**
      * Active manager name
      * @returns {default.computed.activeManager|(function())|string|activeManager}

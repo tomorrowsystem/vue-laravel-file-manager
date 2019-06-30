@@ -46,6 +46,7 @@ export default {
         showFullScreen: true,
         showAbout: true,
         showDiskList: true,
+        showBreadcrumb: true,
         viewType: 'table',
         folderIcon: 'far fa-folder',
         showProperties: true,
